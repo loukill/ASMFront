@@ -1,0 +1,53 @@
+.container {
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.cardWithShadow {
+  margin-bottom: 24px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  background-color: var(--background-color, #f1f8ff);
+}
+
+.table-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--primary-color, #42a5f5);
+}
+
+.table-header {
+  font-weight: bold;
+  color: var(--primary-color, #42a5f5);
+}
+
+.m-t-16 {
+  margin-top: 16px;
+}
+
+.m-t-24 {
+  margin-top: 24px;
+}
+
+.p-24 {
+  padding: 24px;
+}
+
+.add-user-button {
+  font-size: 1.1rem;
+  font-weight: bold;
+  padding: 10px 20px;
+  background-color: var(--primary-color, #42a5f5);
+  color: white;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease;
+}
+
+.add-user-button:hover {
+  background-color: darken(var(--primary-color, #42a5f5), 10%);
+}
+
+.text-center {
+  text-align: center;
+}
