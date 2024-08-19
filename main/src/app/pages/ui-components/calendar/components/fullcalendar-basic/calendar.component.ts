@@ -7,15 +7,15 @@ import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
-import {EventService, Event } from '../../services/eventService';
-import { createEventId } from '../../event-utils';
+import { EventService } from '../../services/eventService';
+import { EventDto } from '../../models/eventDto';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [CommonModule, RouterOutlet, FullCalendarModule],
   templateUrl: './calendar.component.html',
-  styleUrl: './calendar.component.css'
+  styleUrls: ['./calendar.component.css']
 })
 export class CalendarComponent implements OnInit {
   calendarVisible = signal(true);
@@ -44,33 +44,66 @@ export class CalendarComponent implements OnInit {
   });
   currentEvents = signal<EventApi[]>([]);
 
-  constructor(private eventService: EventService, private changeDetector: ChangeDetectorRef) {}
+  constructor(private eventService: EventService, private changeDetector: ChangeDetectorRef) {
+    console.log('CalendarComponent initialized');
+  }
 
   ngOnInit(): void {
+    console.log('ngOnInit called');
     this.loadEvents();
   }
 
+  getUserRole(): string | null {
+    return localStorage.getItem('userRole');
+  }
+
+  getUserId(): string | null {
+    return localStorage.getItem('userId');
+  }
+
   loadEvents() {
-    this.eventService.getEvents().subscribe(
-      (events) => {
-        this.calendarOptions.update((options) => ({
-          ...options,
-          events: events.map((event) => ({
-            id: event.id.toString(),
-            title: `${event.description} - ${event.eventStatus}`,
-            start: event.dateRequest,
-            allDay: true,
-            extendedProps: {
-              prestataireName: event.prestataireName,
-              adminName: event.adminName
-            }
-          }))
-        }));
-      },
-      (error) => {
-        console.error('Error loading events', error);
-      }
-    );
+    const role = this.getUserRole();
+    const userId = this.getUserId();
+
+    if (!userId) {
+      console.error('UserId is missing. Redirecting to login.');
+      return;
+    }
+
+    if (role && userId) {
+      this.eventService.getEvents(userId).subscribe(
+        (events) => {
+          console.log('Events loaded:', events);
+
+          let filteredEvents = events;
+
+          if (role === 'Client' || role === 'Prestataire') {
+            filteredEvents = events.filter(event =>
+              (role === 'Client' && event.clientId === userId) ||
+              (role === 'Prestataire' && event.prestataireId === userId)
+            );
+          }
+
+          this.calendarOptions.update((options) => ({
+            ...options,
+            events: filteredEvents.map((event) => ({
+              id: event.id.toString(),
+              start: event.dateRequest,
+              allDay: false,
+              extendedProps: {
+                description: event.description,
+                prestataireName: event.prestataireName,
+                adminName: event.adminName,
+                eventStatus: event.eventStatus
+              }
+            }))
+          }));
+        },
+        (error) => {
+          console.error('Error loading events', error);
+        }
+      );
+    }
   }
 
   handleCalendarToggle() {
@@ -85,29 +118,79 @@ export class CalendarComponent implements OnInit {
   }
 
   handleDateSelect(selectInfo: DateSelectArg) {
-    const title = prompt('Please enter a new title for your event');
-    const calendarApi = selectInfo.view.calendar;
+    console.log('handleDateSelect called with:', selectInfo);
 
-    calendarApi.unselect(); // clear date selection
+    const description = prompt('Please enter the event description');
+    const adminName = prompt('Please enter the Admin Name (Leave empty if not applicable)');
+    const prestataireName = prompt('Please enter the Prestataire Name (Leave empty if not applicable)');
 
-    if (title) {
-      calendarApi.addEvent({
-        id: createEventId(),
-        title,
-        start: selectInfo.startStr,
-        end: selectInfo.endStr,
-        allDay: selectInfo.allDay
-      });
+    if (!description) {
+      alert("Description is required.");
+      return;
+    }
+
+    if (!adminName && !prestataireName) {
+      alert("Either Admin Name or Prestataire Name must be provided.");
+      return;
+    }
+
+    const userId = this.getUserId();
+    const role = this.getUserRole();
+    if (!userId || !role) {
+      console.error('UserId or Role is missing.');
+      return;
+    }
+
+    const dateRequest = new Date(selectInfo.startStr);
+    if (isNaN(dateRequest.getTime())) {
+      console.error('Invalid date format.');
+      return;
+    }
+
+    const clientName = role === 'Client' ? undefined : (prompt('Please enter the Client Name') || undefined);
+
+    if (role !== 'Client' && !clientName) {
+      alert("Client Name must be provided if you are not a Client.");
+      return;
+    }
+
+    const newEventDto: EventDto = {
+      description:  description.trim(),
+      dateRequest,
+      eventStatus: 'Pending',
+      adminName: adminName || undefined,
+      prestataireName: prestataireName || undefined,
+      clientId: role === 'Client' ? userId : undefined,
+      prestataireId: role === 'Prestataire' ? userId : undefined,
+      clientName
+    };
+
+    // Add a check to ensure newEventDto is fully defined before making the API call
+    if (newEventDto) {
+      this.eventService.createEvent(newEventDto).subscribe(
+        (event) => {
+          console.log('Event created:', event);
+          this.loadEvents();
+        },
+        (error) => {
+          console.error('Error creating event', error);
+        }
+      );
+    } else {
+      console.error('newEventDto is undefined');
     }
   }
 
+
   handleEventClick(clickInfo: EventClickArg) {
     const event = clickInfo.event;
-    const { prestataireName, adminName } = event.extendedProps;
-    alert(`Event: ${event.title}\nPrestataire: ${prestataireName}\nAdmin: ${adminName}`);
+    alert(`Event: ${event.extendedProps['description']}\nStatus: ${event.extendedProps['eventStatus']}\nPrestataire: ${event.extendedProps['prestataireName']}\nAdmin: ${event.extendedProps['adminName']}`);
 
-    if (confirm(`Are you sure you want to delete the event '${event.title}'`)) {
+    if (confirm(`Are you sure you want to delete the event '${event.extendedProps['description']}'`)) {
+      console.log('Event deletion confirmed:', event.extendedProps['description']);
       event.remove();
+    } else {
+      console.log('Event deletion canceled');
     }
   }
 

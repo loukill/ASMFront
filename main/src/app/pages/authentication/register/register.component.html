@@ -44,12 +44,16 @@
 
           <div class="or-border m-t-30">or sign up with</div>
 
+          <div *ngIf="registrationError" class="error-message">
+            {{ registrationError }}
+          </div>
+
           <form [formGroup]="registerForm" (ngSubmit)="register()" class="m-t-30">
             <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
               Name
             </mat-label>
             <mat-form-field appearance="outline" class="w-100" color="primary">
-              <input matInput formControlName="username" />
+              <input matInput formControlName="userName" />
             </mat-form-field>
 
             <mat-label class="mat-subtitle-2 f-s-14 f-w-600 m-b-12 d-block">
@@ -71,14 +75,14 @@
               Role
             </mat-label>
             <mat-form-field appearance="outline" class="w-100" color="primary">
-              <mat-select formControlName="role">
+              <mat-select formControlName="roleUser">
                 <mat-option *ngFor="let role of roles" [value]="role">
                   {{ role }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
 
-            <button mat-flat-button color="primary" class="w-100">
+            <button type="submit" mat-flat-button color="primary" class="w-100">
               Sign Up
             </button>
           </form>
