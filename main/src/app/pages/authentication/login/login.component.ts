@@ -6,6 +6,7 @@ import { AuthService } from '../services/authService';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
+  styleUrl: './login.css'
 })
 export class AppSideLoginComponent {
   loginForm: FormGroup;

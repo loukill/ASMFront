@@ -75,4 +75,14 @@ export class EventService {
     const url = `${this.apiUrl}/${eventId}`;
     return this.http.delete<void>(url);
   }
+
+  acceptEvent(eventId: number, token: string): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.post(`${this.apiUrl}/accept/${eventId}`, {}, { headers });
+  }
+
+  rejectEvent(eventId: number, token: string): Observable<any> {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.post(`${this.apiUrl}/reject/${eventId}`, {}, { headers });
+  }
 }

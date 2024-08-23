@@ -209,3 +209,26 @@ li button:hover {
   background-color: #0056b3;
   transform: scale(1.02);
 }
+
+.accept-button {
+  background-color: #4CAF50; /* Green */
+  color: white;
+  padding: 10px 20px;
+  margin: 10px 0 10px 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.reject-button {
+  background-color: #f44336; /* Red */
+  color: white;
+  padding: 10px 20px;
+  margin: 10px 0 10px 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.accept-button:hover,
+.reject-button:hover {
+  opacity: 0.8;
+}

@@ -108,6 +108,12 @@
   </ul>
 </div>
   </div>
+  <div *ngIf="userRole === 'Prestataire' && isEventSelected" class="button-container">
+    <button type="button" class="accept-button" (click)="acceptEvent(event.id ?? 0)">
+      Accept Event
+    </button>
+    <button type="button" class="reject-button" (click)="rejectEvent(event.id ?? 0)">
+      Reject Event
+    </button>
+  </div>
 </form>
-
-

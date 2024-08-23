@@ -196,6 +196,34 @@ export class EventFormComponent implements OnInit {
     this.assignEvent(prestataireName);
   }
 
+  acceptEvent(eventId: number) {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      this.eventService.acceptEvent(eventId, token).subscribe({
+        next: (response) => {
+          console.log('Event accepted:', response);
+        },
+        error: (error) => {
+          console.error('Error accepting event:', error);
+        }
+      });
+    }
+  }
+
+  rejectEvent(eventId: number) {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      this.eventService.rejectEvent(eventId, token).subscribe({
+        next: (response) => {
+          console.log('Event rejected:', response);
+        },
+        error: (error) => {
+          console.error('Error rejecting event:', error);
+        }
+      });
+    }
+  }
+
   // resetForm() {
   //   this.event = {
   //     description: '',
