@@ -15,7 +15,7 @@ export const navItems: NavItem[] = [
   {
     displayName: 'Calendrier',
     iconName: 'calendar-check',
-    route: '/ui-components/badge',
+    route: '/ui-components/calendar',
   },
   {
     displayName: 'Chips',

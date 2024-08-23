@@ -1,47 +1,225 @@
-
+/* General Styles */
 h2 {
   margin: 0;
-  font-size: 16px;
+  font-size: 1.25em; /* Responsive font size */
 }
 
 ul {
   margin: 0;
   padding: 0 0 0 1.5em;
+  list-style: none; /* Ensure list bullets are not displayed */
 }
 
 li {
-  margin: 1.5em 0;
+  margin: 1em 0; /* Adjusted margin for better spacing */
   padding: 0;
 }
 
-b { /* used for event dates/times */
+b {
   margin-right: 3px;
 }
 
+/* Layout Styles */
 .demo-app {
   display: flex;
-  min-height: 100%;
-  font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
-  font-size: 14px;
-}
-
-.demo-app-sidebar {
-  width: 300px;
-  line-height: 1.5;
-  background: #eaf9ff;
-  border-right: 1px solid #d3e2e8;
-}
-
-.demo-app-sidebar-section {
-  padding: 2em;
+  flex-direction: column;
+  min-height: 100vh; /* Ensures the container takes at least the full viewport height */
 }
 
 .demo-app-main {
   flex-grow: 1;
-  padding: 3em;
+  overflow: auto; /* Ensures scrolling if content overflows */
+  padding-bottom: 60px; /* Adds space at the bottom to prevent content from being hidden by the toolbar */
 }
 
-.fc { /* the calendar root */
-  max-width: 1100px;
+/* Calendar Styles */
+.fc-header-toolbar {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+/* Button Styles */
+.assign-btn {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.assign-btn:hover {
+  background-color: #45a049;
+}
+
+/* Responsiveness */
+@media screen and (max-width: 768px) {
+  .fc-header-toolbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #fff; /* Background color */
+    border-top: 1px solid #ddd; /* Optional border for separation */
+    z-index: 1000; /* Ensures it's on top of other elements */
+    padding: 10px;
+    box-shadow: 0 -2px 5px rgba(0,0,0,0.1); /* Optional shadow for better visibility */
+  }
+
+  .fc-header-toolbar > * {
+    margin: 0 5px; /* Adjust margin as needed */
+  }
+
+  .demo-app-main {
+    padding-bottom: 60px; /* Adjust according to the height of your toolbar */
+  }
+
+  .assign-btn {
+    width: 100%; /* Full width button on small screens */
+    margin: 1em 0;
+    padding: 12px;
+    font-size: 16px;
+  }
+}
+
+/* Additional Styles for Form Elements */
+.event-form-container {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
   margin: 0 auto;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #333;
+}
+
+.form-group input, .custom-select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.submit-button, .update-button, .delete-button, .assign-button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  color: white;
+  transition: background-color 0.3s;
+}
+
+.submit-button {
+  background-color: #007bff;
+}
+
+.submit-button:hover {
+  background-color: #0056b3;
+}
+
+.update-button {
+  background-color: #28a745;
+}
+
+.update-button:hover {
+  background-color: #218838;
+}
+
+.delete-button {
+  background-color: #dc3545;
+}
+
+.delete-button:hover {
+  background-color: #c82333;
+}
+
+.assign-button {
+  background-color: #007bff;
+}
+
+.assign-button:hover {
+  background-color: #0056b3;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 400px;
+  position: relative;
+}
+
+.close-button {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: #ff4b5c;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  z-index: 1002;
+}
+
+.close-button:hover {
+  background: #ff2d3a;
+}
+
+/* Responsive Button Styles */
+li button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: background-color 0.3s, transform 0.2s;
+  z-index: 1001;
+}
+
+li button:hover {
+  background-color: #0056b3;
+  transform: scale(1.02);
 }

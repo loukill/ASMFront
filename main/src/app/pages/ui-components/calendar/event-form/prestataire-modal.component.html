@@ -1,0 +1,12 @@
+<div class="modal-overlay" (click)="closeModal()"></div>
+<div class="modal-content">
+  <button class="close-button" (click)="closeModal()">X</button>
+  <h2>Select Prestataire</h2>
+  <ul>
+    <li *ngFor="let prestataire of prestataires">
+      <button (click)="selectPrestataire(prestataire.id)">
+        {{ prestataire.userName }}
+      </button>
+    </li>
+  </ul>
+</div>

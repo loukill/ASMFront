@@ -1,19 +1,18 @@
-import { Routes } from '@angular/router';
-
-// ui
-import { AppBadgeComponent } from './badge/badge.component';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { CalendarComponent } from './calendar/components/fullcalendar-basic/calendar.component';
 import { AppChipsComponent } from './chips/chips.component';
 import { AppListsComponent } from './lists/lists.component';
-import { CalendarComponent } from './calendar/components/fullcalendar-basic/calendar.component';
 import { AppMenuComponent } from './menu/menu.component';
 import { AppTooltipsComponent } from './tooltips/tooltips.component';
+import { EventFormComponent } from './calendar/event-form/event-form.component';
 
-export const UiComponentsRoutes: Routes = [
+const routes: Routes = [
   {
     path: '',
     children: [
       {
-        path: 'badge',
+        path: 'calendar',
         component: CalendarComponent,
       },
       {
@@ -32,6 +31,16 @@ export const UiComponentsRoutes: Routes = [
         path: 'tooltips',
         component: AppTooltipsComponent,
       },
+      {
+        path: 'create-event',
+        component: EventFormComponent,
+      },
     ],
   },
 ];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule],
+})
+export class UiComponentsRoutingModule {}

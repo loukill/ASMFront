@@ -1,0 +1,113 @@
+<form (ngSubmit)="onSubmit()" class="event-form-container">
+  <div class="form-group">
+    <label for="description">Description</label>
+    <input
+      type="text"
+      id="description"
+      [(ngModel)]="event.description"
+      name="description"
+      placeholder="Enter event description"
+      required
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="adminName">Admin Name</label>
+    <input
+      type="text"
+      id="adminName"
+      [(ngModel)]="event.adminName"
+      name="adminName"
+      placeholder="Enter admin name"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="prestataireName">Prestataire Name</label>
+    <input
+      type="text"
+      id="prestataireName"
+      [(ngModel)]="event.prestataireName"
+      name="prestataireName"
+      placeholder="Enter prestataire name"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="clientName">Client Name</label>
+    <input
+      type="text"
+      id="clientName"
+      [(ngModel)]="event.clientName"
+      name="clientName"
+      placeholder="Enter client name"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="eventStatus">Event Status</label>
+    <select
+      id="eventStatus"
+      [(ngModel)]="event.eventStatus"
+      name="eventStatus"
+      required
+      class="custom-select"
+    >
+      <option value="Pending">Pending</option>
+      <option value="Accepted">Accepted</option>
+      <option value="InProgress">In Progress</option>
+      <option value="Completed">Completed</option>
+      <option value="Rejected">Rejected</option>
+      <option value="Assigned">Assigned</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="dateRequest">Event Date</label>
+    <input
+      type="date"
+      id="dateRequest"
+      [(ngModel)]="eventDate"
+      name="dateRequest"
+    />
+  </div>
+
+  <div class="form-group">
+    <label for="timeRequest">Event Time</label>
+    <input
+      type="time"
+      id="timeRequest"
+      [(ngModel)]="eventTime"
+      name="timeRequest"
+    />
+  </div>
+
+  <button *ngIf="!isEventSelected" type="submit" class="submit-button">Create Event</button>
+
+  <div *ngIf="isEventSelected" class="action-buttons">
+    <button type="button" class="update-button" (click)="updateEvent()">
+      Update Event
+    </button>
+    <button type="button" class="delete-button" (click)="deleteEvent()">
+      Delete Event
+    </button>
+  </div>
+
+  <div *ngIf="(userRole === 'Admin' || userRole === 'Prestataire') && isEventSelected" class="button-container">
+    <button type="button" class="assign-button" (click)="openPrestataireModal()">Assign Event to Prestataire</button>
+    <div class="modal-overlay" *ngIf="showPrestataireModal" (click)="closePrestataireModal()"></div>
+<div class="modal-content" *ngIf="showPrestataireModal">
+  <button class="close-button" (click)="closePrestataireModal()">X</button>
+  <h2>Select Prestataire</h2>
+  <ul>
+    <li *ngFor="let prestataire of prestataires">
+      <button (click)="handlePrestataireSelection(prestataire.userName)">
+        {{ prestataire.userName }}
+      </button>
+    </li>
+  </ul>
+</div>
+  </div>
+</form>
+
+

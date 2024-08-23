@@ -9,12 +9,11 @@ export class RoleGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(): boolean {
-    const role = this.authService.getUserRole();
-    if (role) {
-      // Autoriser l'accès si le rôle est correct
+    const token = this.authService.getToken();
+    if (token) {
       return true;
     } else {
-      this.router.navigate(['/login']); // Redirection vers la page de login si l'utilisateur n'est pas authentifié
+      this.router.navigate(['/login']);
       return false;
     }
   }

@@ -38,6 +38,7 @@ import { EditUserDialogComponent } from './pages/ui-components/lists/edit-user-d
 //Import Service
 import { UserService } from './pages/ui-components/lists/userService';
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -48,7 +49,7 @@ import { UserService } from './pages/ui-components/lists/userService';
     BrandingComponent,
     AppNavItemComponent,
     AddUserDialogComponent,
-    EditUserDialogComponent
+    EditUserDialogComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,4 +1,5 @@
 export interface EventDto {
+  id? : number;
   description: string;
   dateRequest: Date;
   eventStatus: string;
