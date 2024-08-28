@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError, BehaviorSubject  } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators'; // Importation de 'tap' pour manipuler la réponse
 import { LoginDto } from '../login/loginDto';
 import { RegisterDto } from '../register/registerDto';
@@ -42,8 +42,20 @@ export class AuthService {
     );
   }
 
+  checkValidationStatus(userId: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/check-validation-status/${userId}`);
+}
+
   getToken(): string | null {
     return localStorage.getItem('authToken');
+  }
+
+  isTokenExpired(token: string): boolean {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const expiry = payload.exp;
+    const now = Math.floor(Date.now() / 1000);
+
+    return now >= expiry;
   }
 
   getUserRole(): string | null {
