@@ -28,7 +28,13 @@ export class AppSideLoginComponent {
         localStorage.setItem('userRole', response.userRole);
         localStorage.setItem('userId', response.userId);
 
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/dashboard']).then(() => {
+          // Vérifiez si la redirection a réussi
+          console.log('Redirection to /dashboard successful');
+        }).catch(error => {
+          // Affichez l'erreur en cas de problème avec la redirection
+          console.error('Redirection failed', error);
+        });
       }, error => {
         console.error('Login failed', error);
       });

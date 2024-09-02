@@ -1,4 +1,6 @@
-import { Component, ViewEncapsulation, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthService } from '../authentication/services/authService';
 import {
   ApexChart,
   ChartComponent,
@@ -130,7 +132,7 @@ const ELEMENT_DATA: productsData[] = [
   templateUrl: './dashboard.component.html',
   encapsulation: ViewEncapsulation.None,
 })
-export class AppDashboardComponent {
+export class AppDashboardComponent implements OnInit {
   @ViewChild('chart') chart: ChartComponent = Object.create(null);
 
   public salesOverviewChart!: Partial<salesOverviewChart> | any;
@@ -221,12 +223,25 @@ export class AppDashboardComponent {
     },
   ];
 
-  constructor() {
+  constructor(private authService: AuthService, private router: Router) {}
+
+  ngOnInit() {
+    const token = this.authService.getToken();
+
+    if (!token || this.authService.isTokenExpired(token)) {
+      this.router.navigate(['/authentication/login']);
+    }
+
+    // Initialize your charts here as previously defined
+    this.initializeCharts();
+  }
+
+  private initializeCharts() {
     // sales overview chart
     this.salesOverviewChart = {
       series: [
         {
-          name: 'Eanings this month',
+          name: 'Earnings this month',
           data: [355, 390, 300, 350, 390, 180, 355, 390],
           color: '#5D87FF',
         },
@@ -236,7 +251,6 @@ export class AppDashboardComponent {
           color: '#49BEFF',
         },
       ],
-
       grid: {
         borderColor: 'rgba(0,0,0,0.1)',
         strokeDashArray: 3,
@@ -310,95 +324,87 @@ export class AppDashboardComponent {
       ],
     };
 
-    // yearly breakup chart
+    // yearly chart
     this.yearlyChart = {
-      series: [38, 40, 25],
-
+      series: [
+        {
+          name: 'Earning',
+          data: [355, 390, 300, 350, 390, 180, 355, 390],
+        },
+        {
+          name: 'Marketing',
+          data: [280, 250, 325, 215, 250, 310, 280, 250],
+        },
+        {
+          name: 'Sales',
+          data: [280, 250, 325, 215, 250, 310, 280, 250],
+        },
+      ],
       chart: {
         type: 'donut',
-        fontFamily: "'Plus Jakarta Sans', sans-serif;",
+        height: 240,
+        fontFamily: 'DM sans',
         foreColor: '#adb0bb',
-        toolbar: {
-          show: false,
-        },
-        height: 130,
       },
-      colors: ['#5D87FF', '#ECF2FF', '#F9F9FD'],
+      dataLabels: { enabled: false },
+      stroke: { width: 0 },
+      fill: { type: 'solid', opacity: 1 },
+      legend: { show: false },
+      responsive: [
+        {
+          breakpoint: 991,
+          options: {
+            chart: {
+              width: 150,
+            },
+          },
+        },
+      ],
+      tooltip: { theme: 'light' },
+      colors: ['#5D87FF', '#ecf2ff', '#49BEFF'],
       plotOptions: {
         pie: {
-          startAngle: 0,
-          endAngle: 360,
           donut: {
             size: '75%',
             background: 'transparent',
           },
         },
       },
-      stroke: {
-        show: false,
-      },
-      dataLabels: {
-        enabled: false,
-      },
-      legend: {
-        show: false,
-      },
-      responsive: [
-        {
-          breakpoint: 991,
-          options: {
-            chart: {
-              width: 120,
-            },
-          },
-        },
-      ],
-      tooltip: {
-        enabled: false,
-      },
     };
 
-    // mohtly earnings chart
+    // monthly chart
     this.monthlyChart = {
       series: [
         {
-          name: '',
-          color: '#49BEFF',
-          data: [25, 66, 20, 40, 12, 58, 20],
+          name: 'Income',
+          data: [35, 65, 45, 80, 45, 80, 45],
         },
       ],
-
       chart: {
-        type: 'area',
-        fontFamily: "'Plus Jakarta Sans', sans-serif;",
-        foreColor: '#adb0bb',
-        toolbar: {
-          show: false,
-        },
+        type: 'bar',
         height: 60,
-        sparkline: {
-          enabled: true,
-        },
-        group: 'sparklines',
+        fontFamily: 'DM sans',
+        foreColor: '#adb0bb',
+        sparkline: { enabled: true },
+        toolbar: { show: false },
       },
-      stroke: {
-        curve: 'smooth',
-        width: 2,
-      },
-      fill: {
-        colors: ['#E8F7FF'],
-        type: 'solid',
-        opacity: 0.05,
-      },
-      markers: {
-        size: 0,
-      },
-      tooltip: {
-        theme: 'dark',
-        x: {
-          show: false,
+      colors: ['#5D87FF'],
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: '35%',
+          borderRadius: [4],
         },
       },
+      dataLabels: { enabled: false },
+      legend: { show: false },
+      grid: { show: false },
+      xaxis: {
+        type: 'category',
+        categories: ['1', '2', '3', '4', '5', '6', '7', '8'],
+      },
+      yaxis: { show: false },
+      tooltip: { theme: 'light' },
     };
   }
 }

@@ -1,0 +1,81 @@
+.user-profile-container {
+  padding: 20px;
+  max-width: 600px;
+  margin: 10 auto;
+  position: relative;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f5f5f5;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.dialog-container {
+  width: 600px; /* Augmenter la largeur */
+  padding: 20px; /* Ajouter de l'espacement autour du contenu */
+}
+
+.form-container {
+  margin: 20px; /* Ajouter de l'espacement autour du formulaire */
+  padding: 20px; /* Ajouter de l'espacement à l'intérieur du formulaire */
+  background-color: #f9f9f9; /* Couleur de fond pour contraster avec le bord */
+  border-radius: 10px; /* Ajouter des coins arrondis */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Ajouter une ombre pour un effet de profondeur */
+}
+
+.close-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px; /* Taille plus petite */
+  color: red; /* Couleur rouge */
+  padding: 0; /* Enlever le padding pour une meilleure gestion de l'espace */
+  position: absolute;
+  top: 10px; /* Positionnement en haut à droite */
+  right: 10px;
+}
+
+.close-button:hover {
+  color: darkred; /* Couleur légèrement plus foncée au survol */
+}
+
+.user-profile-container h2 {
+  margin: 0;
+  font-size: 24px;
+}
+
+.user-profile-container form div {
+  margin-bottom: 15px;
+}
+
+.user-profile-container label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.user-profile-container input {
+  width: 100%;
+  padding: 8px;
+  box-sizing: border-box;
+}
+
+.user-profile-container button[type="submit"] {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.user-profile-container button[type="submit"]:hover {
+  background-color: #0056b3;
+}

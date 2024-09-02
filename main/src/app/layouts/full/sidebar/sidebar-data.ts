@@ -23,8 +23,8 @@ export const navItems: NavItem[] = [
     route: '/ui-components/chips',
   },
   {
-    displayName: 'Lists',
-    iconName: 'list',
+    displayName: 'Tasks',
+    iconName: 'list-check',
     route: '/ui-components/lists',
   },
   {

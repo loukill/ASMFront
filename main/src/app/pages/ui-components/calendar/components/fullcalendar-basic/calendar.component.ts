@@ -1,6 +1,6 @@
 import { Component, signal, ChangeDetectorRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import { RouterOutlet, Router } from '@angular/router';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { CalendarOptions, DateSelectArg, EventClickArg, EventApi } from '@fullcalendar/core';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -10,7 +10,6 @@ import listPlugin from '@fullcalendar/list';
 import { EventService } from '../../services/eventService';
 import { EventDto } from '../../models/eventDto';
 import { AssignRequestDto } from '../../models/AssignRequestDto';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -47,13 +46,28 @@ export class CalendarComponent implements OnInit {
   });
   currentEvents = signal<EventApi[]>([]);
 
-  constructor(private eventService: EventService, private changeDetector: ChangeDetectorRef, private router : Router) {
+  constructor(private eventService: EventService, private changeDetector: ChangeDetectorRef, private router: Router) {
     console.log('CalendarComponent initialized');
   }
 
   ngOnInit(): void {
     console.log('ngOnInit called');
+    this.checkTokenExpiration();
     this.loadEvents();
+  }
+
+  checkTokenExpiration(): void {
+    const token = localStorage.getItem('authToken');
+    if (!token || this.isTokenExpired(token)) {
+      console.error('Token is missing or expired. Redirecting to login.');
+      this.router.navigate(['/authentication/login']);
+    }
+  }
+
+  isTokenExpired(token: string): boolean {
+    const expiry = (JSON.parse(atob(token.split('.')[1]))).exp;
+    const now = Math.floor(Date.now() / 1000);
+    return expiry < now;
   }
 
   getUserRole(): string | null {

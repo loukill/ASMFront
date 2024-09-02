@@ -8,7 +8,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
-
+import { MatCard } from '@angular/material/card';
 
 // icons
 import { TablerIconsModule } from 'angular-tabler-icons';
@@ -32,6 +32,7 @@ import { AppSideRegisterComponent } from './register/register.component';
     ReactiveFormsModule,
     MatSelectModule,
     TablerIconsModule.pick(TablerIcons),
+    MatCard
   ],
   declarations: [
     AppSideLoginComponent,

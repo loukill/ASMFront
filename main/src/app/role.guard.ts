@@ -8,10 +8,11 @@ import { AuthService } from './pages/authentication/services/authService';
 export class RoleGuard implements CanActivate {
   constructor(private authService: AuthService, private router: Router) {}
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-    const token = this.authService.getToken();
+  canActivate(): boolean {
+    const token = localStorage.getItem('authToken');
 
-    if (token && !this.authService.isTokenExpired(token)) {
+    if (token) {
+      // You may want to add additional logic here to validate the token
       return true;
     } else {
       this.router.navigate(['/authentication/login']);

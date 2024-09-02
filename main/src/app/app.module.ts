@@ -38,6 +38,10 @@ import { EditUserDialogComponent } from './pages/ui-components/lists/edit-user-d
 //Import Service
 import { UserService } from './pages/ui-components/lists/userService';
 
+//Import Components
+import { UserProfileComponent } from './pages/user-profile/user-profile.component';
+import { ResetPasswordComponent } from './pages/authentication/resetPassword/resetPassword';
+import { ForgotPasswordComponent } from './pages/authentication/forgot-password/forgot-password.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +54,9 @@ import { UserService } from './pages/ui-components/lists/userService';
     AppNavItemComponent,
     AddUserDialogComponent,
     EditUserDialogComponent,
+    UserProfileComponent,
+    ResetPasswordComponent,
+    ForgotPasswordComponent
   ],
   imports: [
     BrowserModule,

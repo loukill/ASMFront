@@ -36,16 +36,11 @@
     />
   </button>
   <mat-menu #profilemenu="matMenu" class="topbar-dd cardWithShadow">
-    <button mat-menu-item>
-      <mat-icon class="d-flex align-items-center"
-        ><i-tabler name="user" class="icon-18 d-flex"></i-tabler></mat-icon
-      >My Profile
-    </button>
-    <button mat-menu-item>
-      <mat-icon class="d-flex align-items-center"
-        ><i-tabler name="mail" class="icon-18 d-flex"></i-tabler></mat-icon
-      >My Account
-    </button>
+      <button mat-menu-item (click)="onProfileClick()">
+        <mat-icon class="d-flex align-items-center"
+          ><i-tabler name="user" class="icon-18 d-flex"></i-tabler></mat-icon
+        >My Profile
+      </button>
     <a href="/ui-components/calendar">
     <button mat-menu-item>
       <mat-icon class="d-flex align-items-center"
@@ -60,13 +55,12 @@
     </a>
 
     <div class="p-x-12 m-t-12">
-      <a
-        [routerLink]="['/authentication/login']"
+      <button
+        (click)="onLogout()"
         mat-stroked-button
         color="primary"
         class="w-100"
-        >Logout</a
-      >
+      >Logout</button>
     </div>
   </mat-menu>
 </mat-toolbar>

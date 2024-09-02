@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError, BehaviorSubject  } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators'; // Importation de 'tap' pour manipuler la réponse
+import { catchError, tap } from 'rxjs/operators';
 import { LoginDto } from '../login/loginDto';
 import { RegisterDto } from '../register/registerDto';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ import { RegisterDto } from '../register/registerDto';
 export class AuthService {
   private apiUrl = 'http://localhost:5000/api/account';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
   login(loginDto: LoginDto): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/login`, loginDto).pipe(
@@ -63,7 +64,50 @@ export class AuthService {
     return userRole || null;
   }
 
-  logout(): void {
+  getCurrentUserId(): string | null {
+    try {
+      const userId = localStorage.getItem('userId');
+      return userId;  // Retourne directement la chaîne de caractères
+    } catch (error) {
+      console.error('Error retrieving userId from localStorage:', error);
+      return null;
+    }
+  }
+
+  forgotPassword(data: any): Observable<string> {
+    return this.http.post('http://localhost:5000/api/account/forgot-password', data, { responseType: 'text' });
+}
+
+  resetPassword(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reset-password`, data);
+  }
+
+  logout() {
+    const userId = localStorage.getItem('userId');
+
+    if (userId) {
+      this.http.post(`${this.apiUrl}/logout`, { userId }).subscribe(
+        () => {
+          // On successful logout, clear the session
+          this.clearSession();
+        },
+        (error) => {
+          console.error('Logout failed', error);
+        }
+      );
+    } else {
+      console.error('User ID not found');
+    }
+  }
+
+  private clearSession() {
     localStorage.removeItem('authToken');
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userId');
+
+    // Redirect to login page
+    this.router.navigate(['/authentication/login']);
   }
 }
