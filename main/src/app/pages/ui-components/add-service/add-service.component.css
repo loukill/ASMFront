@@ -1,0 +1,91 @@
+/* General page layout */
+.add-service-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f3f4f6;
+  padding: 20px;
+}
+
+/* Card layout */
+.service-card {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Modern Typography */
+h2 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Form input design */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.input-container {
+  position: relative;
+}
+
+.input-icon i {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  color: #6c757d;
+}
+
+input, textarea, select {
+  padding-left: 40px;
+  font-size: 16px;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 8px;
+  border: 1px solid #ced4da;
+  width: 100%;
+  height: 48px;
+  transition: all 0.3s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+}
+
+textarea {
+  height: 100px;
+}
+
+/* Error message */
+.error-message {
+  color: #dc3545;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+/* Button styling */
+.btn-modern {
+  background-color: #007bff;
+  color: white;
+  padding: 12px 30px;
+  font-size: 16px;
+  font-family: 'Poppins', sans-serif;
+  border-radius: 50px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-modern:hover {
+  background-color: #0056b3;
+  transform: translateY(-3px);
+}
+
+.btn-modern i {
+  margin-right: 8px;
+}

@@ -1,0 +1,156 @@
+<form (ngSubmit)="onSubmit()" class="event-form-container">
+  <!-- Select POS -->
+  <div class="form-group">
+    <label for="pos">Select POS</label>
+    <select
+      id="pos"
+      [(ngModel)]="selectedPosId"
+      (change)="onPosChange()"
+      name="pos"
+      required
+      class="custom-select"
+    >
+      <option *ngFor="let pos of posList" [value]="pos.posId">
+        {{ pos.posName }} - {{ pos.posLocation }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Event Description -->
+  <div class="form-group">
+    <label for="description">Description</label>
+    <input
+      type="text"
+      id="description"
+      [(ngModel)]="event.description"
+      name="description"
+      placeholder="Enter event description"
+      required
+    />
+  </div>
+
+  <!-- Select Prestataire -->
+  <div class="form-group">
+    <label for="prestataireName">Select Prestataire</label>
+    <select
+      id="prestataireName"
+      [(ngModel)]="event.prestataireName"
+      name="prestataireName"
+      class="custom-select"
+      required
+    >
+      <option *ngFor="let prestataire of prestataires" [value]="prestataire.userName">
+        {{ prestataire.userName }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Client Name -->
+  <div class="form-group">
+    <label for="clientName">Client Name</label>
+    <input
+      type="text"
+      id="clientName"
+      [(ngModel)]="event.clientName"
+      name="clientName"
+      placeholder="Enter client name"
+    />
+  </div>
+
+  <!-- Event Status -->
+  <div class="form-group">
+    <label for="eventStatus">Event Status</label>
+    <select
+      id="eventStatus"
+      [(ngModel)]="event.eventStatus"
+      name="eventStatus"
+      required
+      class="custom-select"
+    >
+      <option value="Pending">Pending</option>
+      <option value="Assigned">Assigned</option>
+      <option value="Accepted">Accepted</option>
+      <option value="Rejected">Rejected</option>
+    </select>
+  </div>
+
+  <!-- Select Service -->
+  <div class="form-group">
+    <label for="service">Select Service</label>
+    <select
+      id="service"
+      [(ngModel)]="selectedServiceId"
+      name="service"
+      required
+      class="custom-select"
+    >
+      <option *ngFor="let service of services" [value]="service.serviceId">
+        {{ service.serviceName }} - {{ service.prix | currency }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Event Date -->
+  <div class="form-group">
+    <label for="dateRequest">Event Date</label>
+    <input
+      type="date"
+      id="dateRequest"
+      [(ngModel)]="eventDate"
+      name="dateRequest"
+      required
+    />
+  </div>
+
+  <!-- Event Time -->
+  <div class="form-group">
+    <label for="timeRequest">Event Time</label>
+    <input
+      type="time"
+      id="timeRequest"
+      [(ngModel)]="eventTime"
+      name="timeRequest"
+    />
+  </div>
+
+  <!-- Buttons -->
+  <div class="form-group action-buttons">
+
+    <!-- Show Update/Delete Buttons if Event is selected -->
+    <div *ngIf="(userRole === 'Client') && isEventSelected">
+      <button type="button" class="update-button" (click)="updateEvent()">
+        Update Event
+      </button>
+      <button type="button" class="delete-button" (click)="deleteEvent()">
+        Delete Event
+      </button>
+    </div>
+
+    <!-- Admin/Prestataire Buttons for Assigning or Accepting/Rejecting -->
+    <div *ngIf="(userRole === 'Admin') && isEventSelected" class="button-container">
+      <button type="button" class="assign-button" (click)="assignEvent()">Assign Event to Prestataire</button>
+      <div class="modal-overlay" *ngIf="showPrestataireModal" (click)="closePrestataireModal()"></div>
+      <div class="modal-content" *ngIf="showPrestataireModal">
+        <button class="close-button" (click)="closePrestataireModal()">X</button>
+        <h2>Select Prestataire</h2>
+        <ul>
+          <li *ngFor="let prestataire of prestataires">
+            <button (click)="handlePrestataireSelection(prestataire.userName)">
+              {{ prestataire.userName }}
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Prestataire Buttons for Accepting or Rejecting Event -->
+    <div *ngIf="userRole === 'Prestataire' && isEventSelected" class="button-container">
+      <button type="button" class="accept-button" (click)="acceptEvent()">
+        Accept Event
+      </button>
+      <button type="button" class="reject-button" (click)="rejectEvent()">
+        Reject Event
+      </button>
+    </div>
+  </div>
+</form>

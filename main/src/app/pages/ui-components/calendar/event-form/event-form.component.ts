@@ -2,10 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { EventService } from '../services/eventService';
 import { PrestataireService } from '../services/prestataireService';
 import { AuthService } from '../../../authentication/services/authService';
+import { PosService } from 'src/app/pages/dashboard/services/PosService';
 import { EventDto } from '../models/eventDto';
 import { Prestataire } from '../models/prestataireDto';
 import { AssignRequestDto } from '../models/AssignRequestDto';
 import { ActivatedRoute } from '@angular/router';
+import { Service } from '../models/Service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-event-form',
@@ -21,6 +24,7 @@ export class EventFormComponent implements OnInit {
     dateRequest: new Date(),
     eventStatus: 'Pending'
   };
+  submitted: boolean = false;
 
   eventDate: string = '';
   eventTime: string = '';
@@ -28,35 +32,71 @@ export class EventFormComponent implements OnInit {
   userRole: string = '';
   prestataires: Prestataire[] = [];
   showPrestataireModal = false;
+  posId: number | null = null;
+  services: Service[] = [];
+  selectedServiceId: number | null = null;
+  posList: any[] = [];
+  selectedPosId: number | null = null;
 
   constructor(
     private eventService: EventService,
     private route: ActivatedRoute,
     private authService: AuthService,
-    private prestataireService: PrestataireService
+    private prestataireService: PrestataireService,
+    private posService: PosService,
+    private router : Router
   ) {}
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
-      const eventId = params['eventId'];
-      if (eventId) {
-        this.onEventClick(eventId);
-      }
+      const selectedDate = params['date'];
+      this.eventDate = selectedDate
+        ? new Date(selectedDate).toISOString().split('T')[0]
+        : new Date().toISOString().split('T')[0];
+
+      const currentTime = new Date();
+      this.eventTime = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      this.selectedPosId = params['posId'] ? +params['posId'] : null;
     });
+
     this.userRole = this.authService.getUserRole() ?? '';
-    console.log('User role:', this.userRole);
-    this.loadPrestataires();
+    this.loadPos();
   }
 
-  loadPrestataires() {
-    this.prestataireService.getPrestataires().subscribe(
+  onPosChange() {
+    if (this.selectedPosId) {
+      this.loadPrestatairesForPos(this.selectedPosId);
+      this.loadServicesForPos(this.selectedPosId);
+    }
+  }
+
+  loadPrestatairesForPos(posId: number) {
+    this.prestataireService.getPrestatairesByPos(posId).subscribe(
       (data) => {
-        console.log('Prestataires fetched:', data);
         this.prestataires = data ?? [];
       },
       (error) => {
-        console.error('Error fetching prestataires', error);
+        console.error('Error fetching prestataires for POS', error);
       }
+    );
+  }
+
+  loadServicesForPos(posId: number) {
+    this.eventService.getServicesByPos(posId).subscribe(
+      (data) => {
+        this.services = data ?? [];
+      },
+      (error) => {
+        console.error('Error fetching services for POS', error);
+      }
+    );
+  }
+
+  loadPos() {
+    this.posService.getPosList().subscribe(
+      (data) => this.posList = data,
+      (error) => console.error('Error fetching POS list:', error)
     );
   }
 
@@ -73,14 +113,29 @@ export class EventFormComponent implements OnInit {
   }
 
   createEvent() {
+    console.log('Creating event with POS ID:', this.posId);
+
+    if (this.selectedPosId === null) {
+      alert('Please select a POS.');
+      return;
+    }
+
+    if (this.selectedServiceId === null) {
+      console.error('Service ID is not selected.');
+      alert('Service ID must be selected.');
+      return;
+    }
+
     const combinedDateTime = this.combineDateAndTime(this.eventDate, this.eventTime);
     this.event.dateRequest = combinedDateTime;
+    this.event.posId = this.selectedPosId;
+    this.event.serviceId = this.selectedServiceId;
 
     this.eventService.createEvent(this.event).subscribe(
       (response) => {
         console.log('Event created successfully:', response);
         alert('Event created successfully!');
-        //this.resetForm();
+        this.router.navigate(['/ui-components/calendar'])
       },
       (error) => {
         console.error('Error creating event:', error);
@@ -88,7 +143,6 @@ export class EventFormComponent implements OnInit {
       }
     );
   }
-
 
   combineDateAndTime(date: string, time: string): Date {
     const combinedDateTime = new Date(date);
@@ -197,31 +251,25 @@ export class EventFormComponent implements OnInit {
   }
 
   acceptEvent(eventId: number) {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      this.eventService.acceptEvent(eventId, token).subscribe({
-        next: (response) => {
-          console.log('Event accepted:', response);
-        },
-        error: (error) => {
-          console.error('Error accepting event:', error);
-        }
-      });
-    }
+    this.eventService.acceptEvent(eventId).subscribe({
+      next: (response) => {
+        console.log('Event accepted:', response);
+      },
+      error: (error) => {
+        console.error('Error accepting event:', error);
+      }
+    });
   }
 
   rejectEvent(eventId: number) {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-      this.eventService.rejectEvent(eventId, token).subscribe({
-        next: (response) => {
-          console.log('Event rejected:', response);
-        },
-        error: (error) => {
-          console.error('Error rejecting event:', error);
-        }
-      });
-    }
+    this.eventService.rejectEvent(eventId).subscribe({
+      next: (response) => {
+        console.log('Event rejected:', response);
+      },
+      error: (error) => {
+        console.error('Error rejecting event:', error);
+      }
+    });
   }
 
   // resetForm() {

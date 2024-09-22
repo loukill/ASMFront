@@ -1,0 +1,39 @@
+<div *ngIf="pos">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>{{ pos.posName }}</mat-card-title>
+      <mat-card-subtitle>{{ pos.posLocation }}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <img *ngIf="pos.imageUrl" [src]="pos.imageUrl" alt="{{ pos.posName }}" class="pos-image"/>
+      <div *ngIf="!pos.imageUrl" class="no-image">Image not available</div>
+
+      <h4>Services:</h4>
+      <ul *ngIf="pos.services.length > 0">
+        <li *ngFor="let service of pos.services">
+          {{ service.name }} - {{ service.prix | currency }}
+        </li>
+      </ul>
+
+      <h4>Prestataires:</h4>
+      <ul *ngIf="pos.prestataires.length > 0">
+        <li *ngFor="let prestataire of pos.prestataires">
+          {{ prestataire.userName }}
+        </li>
+      </ul>
+
+      <!-- Update and Delete Buttons -->
+      <div class="action-buttons">
+        <button mat-raised-button color="primary" class="update-button" (click)="onUpdatePOS()">
+          Update POS
+        </button>
+        <button mat-raised-button color="warn" class="delete-button" (click)="onDeletePOS()">
+          Delete POS
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+<button mat-fab color="primary" class="floating-add-button" (click)="onAddPOS()">
+  <mat-icon>add</mat-icon>
+</button>

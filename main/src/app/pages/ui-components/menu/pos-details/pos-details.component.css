@@ -1,0 +1,51 @@
+.pos-details-container {
+  padding: 20px;
+}
+
+.pos-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.no-image {
+  font-style: italic;
+  color: grey;
+  margin-bottom: 20px;
+}
+
+.action-buttons {
+  margin-top: 16px;
+}
+
+.update-button {
+  border: 2px solid #007bff; /* Blue border */
+  color: #007bff; /* Blue text */
+  margin-right: 8px; /* Spacing between buttons */
+}
+
+.update-button:hover {
+  background-color: #e7f0ff; /* Light blue background on hover */
+}
+
+.delete-button {
+  border: 2px solid #dc3545; /* Red border */
+  color: #dc3545; /* Red text */
+}
+
+.delete-button:hover {
+  background-color: #f8d7da; /* Light red background on hover */
+}
+
+.floating-add-button {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 1000; /* Ensure it stays on top of other elements */
+}
+
+/* Optional: Style the button icon */
+.floating-add-button mat-icon {
+  font-size: 24px;
+}

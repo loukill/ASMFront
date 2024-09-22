@@ -140,6 +140,15 @@
   z-index: 1001; /* Ensure the modal is above the overlay */
 }
 
+.input-error {
+  border: 2px solid red; /* Bordure rouge pour les champs en erreur */
+}
+
+.error-message {
+  color: red; /* Texte rouge pour les messages d'erreur */
+  font-size: 0.9em; /* Taille de police pour les messages d'erreur */
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

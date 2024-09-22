@@ -3,6 +3,7 @@
     <mat-card-title class="title">Ajouter un utilisateur</mat-card-title>
     <mat-card-subtitle class="subtitle">Remplissez les informations ci-dessous pour ajouter un utilisateur</mat-card-subtitle>
   </mat-card-header>
+
   <mat-card-content class="content">
     <form [formGroup]="userForm">
       <!-- User Name -->
@@ -49,8 +50,21 @@
           <mat-option *ngFor="let role of roles" [value]="role">{{ role }}</mat-option>
         </mat-select>
       </mat-form-field>
+
+      <!-- POS Selector -->
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Sélectionner POS</mat-label>
+        <mat-icon matPrefix>store</mat-icon>
+        <mat-select formControlName="posId">
+          <mat-option *ngFor="let pos of posList" [value]="pos.posId">{{ pos.posName }}</mat-option>
+        </mat-select>
+        <mat-error *ngIf="userForm.get('posId')?.hasError('required')">
+          Le POS est requis
+        </mat-error>
+      </mat-form-field>
     </form>
   </mat-card-content>
+
   <mat-card-actions class="actions">
     <button mat-stroked-button color="warn" (click)="onCancel()">Annuler</button>
     <button mat-flat-button color="primary" [mat-dialog-close]="userForm.value" [disabled]="userForm.invalid">

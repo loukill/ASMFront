@@ -2,3 +2,7 @@
   width: 100px;
   height: auto;
 }
+
+.text-danger {
+  color: red;
+}

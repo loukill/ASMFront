@@ -1,0 +1,43 @@
+.pos-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 16px;
+}
+
+.pos-card {
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.pos-image {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.no-image {
+  text-align: center;
+  color: #aaa;
+  padding: 16px;
+}
+
+.pos-details {
+  margin-top: 16px;
+}
+
+.pos-details h4 {
+  margin-bottom: 8px;
+}
+
+.pos-details ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.pos-details li {
+  margin-bottom: 4px;
+}

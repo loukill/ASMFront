@@ -18,7 +18,7 @@ export class AppListsComponent implements OnInit {
   isAdmin: boolean = false;
 
   constructor(
-    private dataService: UserService,
+    private userService: UserService,
     private dialog: MatDialog,
     private router: Router
   ) {}
@@ -49,29 +49,33 @@ export class AppListsComponent implements OnInit {
 
   checkAdminRole() {
     const userRole = localStorage.getItem('userRole');
+    const adminId = localStorage.getItem('userId'); // Get admin ID from localStorage
 
-    if (userRole === 'Admin') {
+    if (userRole === 'Admin' && adminId) {
       this.isAdmin = true;
-      this.fetchClients();
-      this.fetchPrestataires();
+      this.fetchClients(adminId);
+      this.fetchPrestataires(adminId);
     } else {
       alert('Access denied. Only administrators can view this page.');
       this.router.navigate(['/dashboard']);
     }
   }
 
-  fetchClients() {
-    this.dataService.fetchClients().subscribe((data) => {
+  fetchClients(adminId: string) {
+    this.userService.fetchClients(adminId).subscribe((data) => {
       this.clients = data;
+    }, error => {
+      console.error("Failed to fetch clients:", error);
     });
   }
 
-  fetchPrestataires() {
-    this.dataService.fetchPrestataires().subscribe((data) => {
+  fetchPrestataires(adminId: string) {
+    this.userService.fetchPrestataires(adminId).subscribe((data) => {
       this.prestataires = data;
+    }, error => {
+      console.error("Failed to fetch prestataires:", error);
     });
   }
-
   addUser(): void {
     const dialogRef = this.dialog.open(AddUserDialogComponent, {
       width: '400px'
@@ -79,10 +83,16 @@ export class AppListsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.dataService.addUser(result).subscribe(() => {
-          this.fetchClients();
-          this.fetchPrestataires();
+        console.log("User data to be added:", result);  // Log the result to confirm it contains the correct data
+        this.userService.addUser(result).subscribe(() => {
+          const adminId = localStorage.getItem('userId')
+          this.fetchClients(adminId!);
+          this.fetchPrestataires(adminId!);
+        }, error => {
+          console.error("Failed to add user:", error);  // Log errors if any
         });
+      } else {
+        console.log("Dialog was closed without saving.");
       }
     });
   }
@@ -95,18 +105,20 @@ export class AppListsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.dataService.updateUser({ ...user, ...result }).subscribe(() => {
-          this.fetchClients();
-          this.fetchPrestataires();
+        this.userService.updateUser({ ...user, ...result }).subscribe(() => {
+          const adminId = localStorage.getItem('userId')
+          this.fetchClients(adminId!);
+          this.fetchPrestataires(adminId!);
         });
       }
     });
   }
 
   deleteUser(userId: string): void {
-    this.dataService.deleteUser(userId).subscribe(() => {
-      this.fetchClients();
-      this.fetchPrestataires();
+    this.userService.deleteUser(userId).subscribe(() => {
+      const adminId = localStorage.getItem('userId')
+          this.fetchClients(adminId!);
+          this.fetchPrestataires(adminId!);
     });
   }
 }

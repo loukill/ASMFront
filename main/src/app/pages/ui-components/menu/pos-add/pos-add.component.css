@@ -1,0 +1,24 @@
+.pos-form {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.image-upload-section {
+  margin-top: 20px;
+}
+
+.action-buttons {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.floating-add-button {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 1000;
+}

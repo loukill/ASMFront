@@ -10,6 +10,7 @@ import { AuthService } from '../services/authService';
 })
 export class AppSideLoginComponent {
   loginForm: FormGroup;
+  loginError: string | null = null;
 
   constructor(private fb: FormBuilder, private authService: AuthService, private router: Router) {
     this.loginForm = this.fb.group({
@@ -23,20 +24,21 @@ export class AppSideLoginComponent {
       this.authService.login(this.loginForm.value).subscribe(response => {
         console.log('Login successful', response);
 
+        // Stockage des tokens et informations utilisateur
         localStorage.setItem('authToken', response.accessToken);
         localStorage.setItem('refreshToken', response.refreshToken);
         localStorage.setItem('userRole', response.userRole);
         localStorage.setItem('userId', response.userId);
 
+        // Redirection vers le tableau de bord
         this.router.navigate(['/dashboard']).then(() => {
-          // Vérifiez si la redirection a réussi
           console.log('Redirection to /dashboard successful');
         }).catch(error => {
-          // Affichez l'erreur en cas de problème avec la redirection
           console.error('Redirection failed', error);
         });
       }, error => {
         console.error('Login failed', error);
+        this.loginError = 'Invalid username or password. Please try again.'; // Gestion de l'erreur
       });
     }
   }

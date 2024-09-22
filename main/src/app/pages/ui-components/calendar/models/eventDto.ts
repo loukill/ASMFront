@@ -8,4 +8,7 @@ export interface EventDto {
   clientId?: string;
   prestataireId?: string;
   clientName?: String;
+  posId?: number;
+  serviceId?: number;
+  adminId?: string;
 }

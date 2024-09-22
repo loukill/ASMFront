@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCard } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 // icons
 import { TablerIconsModule } from 'angular-tabler-icons';
@@ -31,8 +32,9 @@ import { AppSideRegisterComponent } from './register/register.component';
     FormsModule,
     ReactiveFormsModule,
     MatSelectModule,
+    MatFormFieldModule,
     TablerIconsModule.pick(TablerIcons),
-    MatCard
+    MatCard,
   ],
   declarations: [
     AppSideLoginComponent,

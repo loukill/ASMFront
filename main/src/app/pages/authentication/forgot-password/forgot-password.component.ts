@@ -31,6 +31,5 @@ export class ForgotPasswordComponent {
     } else {
         console.log('Form is invalid');
     }
-}
-
+  }
 }

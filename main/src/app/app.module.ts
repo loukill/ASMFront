@@ -34,6 +34,8 @@ import { AppNavItemComponent } from './layouts/full/sidebar/nav-item/nav-item.co
 //Import Composant Dialog
 import { AddUserDialogComponent } from './pages/ui-components/lists/add-user-dialog/add-user-dialog.component';
 import { EditUserDialogComponent } from './pages/ui-components/lists/edit-user-dialog/edit-user-dialog.component';
+import { PosEditComponent } from './pages/ui-components/menu/pos-edit/pos-edit.component';
+import { PosAddComponent } from './pages/ui-components/menu/pos-add/pos-add.component';
 
 //Import Service
 import { UserService } from './pages/ui-components/lists/userService';
@@ -42,6 +44,7 @@ import { UserService } from './pages/ui-components/lists/userService';
 import { UserProfileComponent } from './pages/user-profile/user-profile.component';
 import { ResetPasswordComponent } from './pages/authentication/resetPassword/resetPassword';
 import { ForgotPasswordComponent } from './pages/authentication/forgot-password/forgot-password.component';
+import { AddServiceComponent } from './pages/ui-components/add-service/add-service.component';
 
 @NgModule({
   declarations: [
@@ -54,9 +57,12 @@ import { ForgotPasswordComponent } from './pages/authentication/forgot-password/
     AppNavItemComponent,
     AddUserDialogComponent,
     EditUserDialogComponent,
+    PosEditComponent,
+    PosAddComponent,
     UserProfileComponent,
     ResetPasswordComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    AddServiceComponent
   ],
   imports: [
     BrowserModule,

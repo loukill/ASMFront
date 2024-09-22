@@ -1,0 +1,16 @@
+<div class="pos-container">
+  <!-- Loop through the list of POSs using ngFor -->
+  <mat-card *ngFor="let pos of posList" class="pos-card" (click)="onPosClick(pos)">
+    <mat-card-header>
+      <!-- Display the POS Name and Location -->
+      <mat-card-title>{{ pos.posName }}</mat-card-title>
+      <mat-card-subtitle>{{ pos.posLocation }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Display the POS Image if available, otherwise show placeholder text -->
+      <img *ngIf="pos.imageUrl" [src]="pos.imageUrl" alt="{{ pos.posName }}" class="pos-image"/>
+      <div *ngIf="!pos.imageUrl" class="no-image">Image not available</div>
+    </mat-card-content>
+  </mat-card>
+</div>

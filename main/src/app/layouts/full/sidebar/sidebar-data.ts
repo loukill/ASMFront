@@ -18,9 +18,9 @@ export const navItems: NavItem[] = [
     route: '/ui-components/calendar',
   },
   {
-    displayName: 'Chips',
+    displayName: 'Service',
     iconName: 'poker-chip',
-    route: '/ui-components/chips',
+    route: '/ui-components/add-service',
   },
   {
     displayName: 'Tasks',
@@ -30,7 +30,7 @@ export const navItems: NavItem[] = [
   {
     displayName: 'Menu',
     iconName: 'layout-navbar-expand',
-    route: '/ui-components/menu',
+    route: '/ui-components/pos-list',
   },
   {
     displayName: 'Tooltips',

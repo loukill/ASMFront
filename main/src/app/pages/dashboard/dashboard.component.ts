@@ -1,410 +1,60 @@
 import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../authentication/services/authService';
-import {
-  ApexChart,
-  ChartComponent,
-  ApexDataLabels,
-  ApexLegend,
-  ApexStroke,
-  ApexTooltip,
-  ApexAxisChartSeries,
-  ApexXAxis,
-  ApexYAxis,
-  ApexGrid,
-  ApexPlotOptions,
-  ApexFill,
-  ApexMarkers,
-  ApexResponsive,
-} from 'ng-apexcharts';
-
-interface month {
-  value: string;
-  viewValue: string;
-}
-
-export interface salesOverviewChart {
-  series: ApexAxisChartSeries;
-  chart: ApexChart;
-  dataLabels: ApexDataLabels;
-  plotOptions: ApexPlotOptions;
-  yaxis: ApexYAxis;
-  xaxis: ApexXAxis;
-  fill: ApexFill;
-  tooltip: ApexTooltip;
-  stroke: ApexStroke;
-  legend: ApexLegend;
-  grid: ApexGrid;
-  marker: ApexMarkers;
-}
-
-export interface yearlyChart {
-  series: ApexAxisChartSeries;
-  chart: ApexChart;
-  dataLabels: ApexDataLabels;
-  plotOptions: ApexPlotOptions;
-  tooltip: ApexTooltip;
-  stroke: ApexStroke;
-  legend: ApexLegend;
-  responsive: ApexResponsive;
-}
-
-export interface monthlyChart {
-  series: ApexAxisChartSeries;
-  chart: ApexChart;
-  dataLabels: ApexDataLabels;
-  plotOptions: ApexPlotOptions;
-  tooltip: ApexTooltip;
-  stroke: ApexStroke;
-  legend: ApexLegend;
-  responsive: ApexResponsive;
-}
-
-interface stats {
-  id: number;
-  time: string;
-  color: string;
-  title?: string;
-  subtext?: string;
-  link?: string;
-}
-
-export interface productsData {
-  id: number;
-  imagePath: string;
-  uname: string;
-  position: string;
-  productName: string;
-  budget: number;
-  priority: string;
-}
-
-// ecommerce card
-interface productcards {
-  id: number;
-  imgSrc: string;
-  title: string;
-  price: string;
-  rprice: string;
-}
-
-const ELEMENT_DATA: productsData[] = [
-  {
-    id: 1,
-    imagePath: 'assets/images/profile/user-1.jpg',
-    uname: 'Sunil Joshi',
-    position: 'Web Designer',
-    productName: 'Elite Admin',
-    budget: 3.9,
-    priority: 'low',
-  },
-  {
-    id: 2,
-    imagePath: 'assets/images/profile/user-2.jpg',
-    uname: 'Andrew McDownland',
-    position: 'Project Manager',
-    productName: 'Real Homes Theme',
-    budget: 24.5,
-    priority: 'medium',
-  },
-  {
-    id: 3,
-    imagePath: 'assets/images/profile/user-3.jpg',
-    uname: 'Christopher Jamil',
-    position: 'Project Manager',
-    productName: 'MedicalPro Theme',
-    budget: 12.8,
-    priority: 'high',
-  },
-  {
-    id: 4,
-    imagePath: 'assets/images/profile/user-4.jpg',
-    uname: 'Nirav Joshi',
-    position: 'Frontend Engineer',
-    productName: 'Hosting Press HTML',
-    budget: 2.4,
-    priority: 'critical',
-  },
-];
+import { PosService } from './services/PosService';
+import { ChartComponent } from 'ng-apexcharts';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
+  styleUrl: './dashboard.component.css',
   encapsulation: ViewEncapsulation.None,
 })
 export class AppDashboardComponent implements OnInit {
   @ViewChild('chart') chart: ChartComponent = Object.create(null);
 
-  public salesOverviewChart!: Partial<salesOverviewChart> | any;
-  public yearlyChart!: Partial<yearlyChart> | any;
-  public monthlyChart!: Partial<monthlyChart> | any;
+  public isClient: boolean = false;
+  public posList: any[] = [];
 
-  displayedColumns: string[] = ['assigned', 'name', 'priority', 'budget'];
-  dataSource = ELEMENT_DATA;
+  constructor(private authService: AuthService, private router: Router, private posService: PosService) {}
 
-  months: month[] = [
-    { value: 'mar', viewValue: 'March 2023' },
-    { value: 'apr', viewValue: 'April 2023' },
-    { value: 'june', viewValue: 'June 2023' },
-  ];
+  getUserRole(): string | null {
+    return localStorage.getItem('userRole');
+  }
 
-  // recent transaction
-  stats: stats[] = [
-    {
-      id: 1,
-      time: '09.30 am',
-      color: 'primary',
-      subtext: 'Payment received from John Doe of $385.90',
-    },
-    {
-      id: 2,
-      time: '10.30 am',
-      color: 'accent',
-      title: 'New sale recorded',
-      link: '#ML-3467',
-    },
-    {
-      id: 3,
-      time: '12.30 pm',
-      color: 'success',
-      subtext: 'Payment was made of $64.95 to Michael',
-    },
-    {
-      id: 4,
-      time: '12.30 pm',
-      color: 'warning',
-      title: 'New sale recorded',
-      link: '#ML-3467',
-    },
-    {
-      id: 5,
-      time: '12.30 pm',
-      color: 'error',
-      title: 'New arrival recorded',
-      link: '#ML-3467',
-    },
-    {
-      id: 6,
-      time: '12.30 pm',
-      color: 'success',
-      subtext: 'Payment Done',
-    },
-  ];
-
-  // ecommerce card
-  productcards: productcards[] = [
-    {
-      id: 1,
-      imgSrc: '/assets/images/products/s4.jpg',
-      title: 'Boat Headphone',
-      price: '285',
-      rprice: '375',
-    },
-    {
-      id: 2,
-      imgSrc: '/assets/images/products/s5.jpg',
-      title: 'MacBook Air Pro',
-      price: '285',
-      rprice: '375',
-    },
-    {
-      id: 3,
-      imgSrc: '/assets/images/products/s7.jpg',
-      title: 'Red Valvet Dress',
-      price: '285',
-      rprice: '375',
-    },
-    {
-      id: 4,
-      imgSrc: '/assets/images/products/s11.jpg',
-      title: 'Cute Soft Teddybear',
-      price: '285',
-      rprice: '375',
-    },
-  ];
-
-  constructor(private authService: AuthService, private router: Router) {}
+  onPosClick(pos: any) {
+    console.log('POS Selected:', pos);
+    if (pos.POSId) {
+      this.router.navigate(['/ui-components/calendar'], { queryParams: { posId: pos.POSId } });
+    } else {
+      console.error('posId is null or undefined:', pos);
+    }
+  }
 
   ngOnInit() {
+    const role = this.getUserRole();
     const token = this.authService.getToken();
 
     if (!token || this.authService.isTokenExpired(token)) {
       this.router.navigate(['/authentication/login']);
     }
 
-    // Initialize your charts here as previously defined
-    this.initializeCharts();
-  }
+    this.isClient = (role === 'Client');
 
-  private initializeCharts() {
-    // sales overview chart
-    this.salesOverviewChart = {
-      series: [
-        {
-          name: 'Earnings this month',
-          data: [355, 390, 300, 350, 390, 180, 355, 390],
-          color: '#5D87FF',
-        },
-        {
-          name: 'Expense this month',
-          data: [280, 250, 325, 215, 250, 310, 280, 250],
-          color: '#49BEFF',
-        },
-      ],
-      grid: {
-        borderColor: 'rgba(0,0,0,0.1)',
-        strokeDashArray: 3,
-        xaxis: {
-          lines: {
-            show: false,
-          },
-        },
-      },
-      plotOptions: {
-        bar: { horizontal: false, columnWidth: '35%', borderRadius: [4] },
-      },
-      chart: {
-        type: 'bar',
-        height: 390,
-        offsetX: -15,
-        toolbar: { show: true },
-        foreColor: '#adb0bb',
-        fontFamily: 'inherit',
-        sparkline: { enabled: false },
-      },
-      dataLabels: { enabled: false },
-      markers: { size: 0 },
-      legend: { show: false },
-      xaxis: {
-        type: 'category',
-        categories: [
-          '16/08',
-          '17/08',
-          '18/08',
-          '19/08',
-          '20/08',
-          '21/08',
-          '22/08',
-          '23/08',
-        ],
-        labels: {
-          style: { cssClass: 'grey--text lighten-2--text fill-color' },
-        },
-      },
-      yaxis: {
-        show: true,
-        min: 0,
-        max: 400,
-        tickAmount: 4,
-        labels: {
-          style: {
-            cssClass: 'grey--text lighten-2--text fill-color',
-          },
-        },
-      },
-      stroke: {
-        show: true,
-        width: 3,
-        lineCap: 'butt',
-        colors: ['transparent'],
-      },
-      tooltip: { theme: 'light' },
-
-      responsive: [
-        {
-          breakpoint: 600,
-          options: {
-            plotOptions: {
-              bar: {
-                borderRadius: 3,
-              },
-            },
-          },
-        },
-      ],
-    };
-
-    // yearly chart
-    this.yearlyChart = {
-      series: [
-        {
-          name: 'Earning',
-          data: [355, 390, 300, 350, 390, 180, 355, 390],
-        },
-        {
-          name: 'Marketing',
-          data: [280, 250, 325, 215, 250, 310, 280, 250],
-        },
-        {
-          name: 'Sales',
-          data: [280, 250, 325, 215, 250, 310, 280, 250],
-        },
-      ],
-      chart: {
-        type: 'donut',
-        height: 240,
-        fontFamily: 'DM sans',
-        foreColor: '#adb0bb',
-      },
-      dataLabels: { enabled: false },
-      stroke: { width: 0 },
-      fill: { type: 'solid', opacity: 1 },
-      legend: { show: false },
-      responsive: [
-        {
-          breakpoint: 991,
-          options: {
-            chart: {
-              width: 150,
-            },
-          },
-        },
-      ],
-      tooltip: { theme: 'light' },
-      colors: ['#5D87FF', '#ecf2ff', '#49BEFF'],
-      plotOptions: {
-        pie: {
-          donut: {
-            size: '75%',
-            background: 'transparent',
-          },
-        },
-      },
-    };
-
-    // monthly chart
-    this.monthlyChart = {
-      series: [
-        {
-          name: 'Income',
-          data: [35, 65, 45, 80, 45, 80, 45],
-        },
-      ],
-      chart: {
-        type: 'bar',
-        height: 60,
-        fontFamily: 'DM sans',
-        foreColor: '#adb0bb',
-        sparkline: { enabled: true },
-        toolbar: { show: false },
-      },
-      colors: ['#5D87FF'],
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          columnWidth: '35%',
-          borderRadius: [4],
-        },
-      },
-      dataLabels: { enabled: false },
-      legend: { show: false },
-      grid: { show: false },
-      xaxis: {
-        type: 'category',
-        categories: ['1', '2', '3', '4', '5', '6', '7', '8'],
-      },
-      yaxis: { show: false },
-      tooltip: { theme: 'light' },
-    };
+    if (this.isClient) {
+      this.posService.getPosList().subscribe((data) => {
+        console.log('API Response:', data);
+        this.posList = data.map((pos: any) => ({
+          POSId: pos.posId,
+          POSName: pos.posName,
+          POSLocation: pos.posLocation,
+          ImageUrl: pos.imageUrl,
+          Services: pos.services,
+          Clients: pos.clients,
+          Prestataires: pos.prestataires,
+        }));
+        console.log('POS List:', this.posList);
+      });
+    }
   }
 }

@@ -22,8 +22,8 @@ export class AuthService {
     );
   }
 
-  register(registerDto: RegisterDto): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/register`, registerDto).pipe(
+  register(formData: FormData): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/register`, formData).pipe(
       tap(response => {
         console.log('Registration response:', response);
       }),
@@ -31,7 +31,6 @@ export class AuthService {
         console.error('Registration error:', error);
         let errorMessage = 'An unknown error occurred. Please try again later.';
 
-        // Check for specific error types (e.g., validation errors)
         if (error.status === 400) {
           errorMessage = 'Invalid registration details. Please check your inputs.';
         } else if (error.status === 500) {

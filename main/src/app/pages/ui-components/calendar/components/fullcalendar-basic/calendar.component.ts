@@ -1,6 +1,6 @@
 import { Component, signal, ChangeDetectorRef, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, Router } from '@angular/router';
+import { RouterOutlet, Router, ActivatedRoute } from '@angular/router';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { CalendarOptions, DateSelectArg, EventClickArg, EventApi } from '@fullcalendar/core';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -12,7 +12,7 @@ import { EventDto } from '../../models/eventDto';
 import { AssignRequestDto } from '../../models/AssignRequestDto';
 
 @Component({
-  selector: 'app-root',
+  selector: 'app-calendar',
   standalone: true,
   imports: [CommonModule, RouterOutlet, FullCalendarModule],
   templateUrl: './calendar.component.html',
@@ -45,8 +45,14 @@ export class CalendarComponent implements OnInit {
     eventsSet: this.handleEvents.bind(this)
   });
   currentEvents = signal<EventApi[]>([]);
+  public posId: string | null = null;
 
-  constructor(private eventService: EventService, private changeDetector: ChangeDetectorRef, private router: Router) {
+  constructor(
+    private eventService: EventService,
+    private changeDetector: ChangeDetectorRef,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
     console.log('CalendarComponent initialized');
   }
 
@@ -78,33 +84,52 @@ export class CalendarComponent implements OnInit {
     return localStorage.getItem('userId');
   }
 
+  getPosId() {
+    return localStorage.getItem('PosId');
+  }
+
   loadEvents() {
     const role = this.getUserRole();
     const userId = this.getUserId();
+    const posId = this.getPosId();
+
+    console.log('Loading events with:', {
+      role: role,
+      userId: userId,
+      posId: posId
+    });
 
     if (!userId) {
       console.error('UserId is missing. Redirecting to login.');
       return;
     }
 
-    if (role && userId) {
-      this.eventService.getEvents(userId).subscribe(
+    if (role) {
+      this.eventService.getEventsByUserId(userId).subscribe(
         (events) => {
           console.log('Events loaded:', events);
 
           let filteredEvents = events;
 
-          if (role === 'Client' || role === 'Prestataire') {
+          if (role === 'Client') {
             filteredEvents = events.filter(event =>
-              (role === 'Client' && event.clientId === userId) ||
-              (role === 'Prestataire' && event.prestataireId === userId)
+              event.clientId === userId // Assuming clientId and userId are strings
             );
+          } else if (role === 'Prestataire') {
+            filteredEvents = events.filter(event =>
+              event.prestataireId === userId // Assuming prestataireId and userId are strings
+            );
+          } else if (role === 'Admin') {
+            // Check if adminId matches the current logged-in userId (admin)
+            filteredEvents = events.filter(event => event.adminId === userId);
           }
+
+          console.log('Filtered events:', filteredEvents);
 
           this.calendarOptions.update((options) => ({
             ...options,
             events: filteredEvents.map((event) => ({
-              id: event.id.toString(),
+              id: event.id?.toString(),
               start: event.dateRequest,
               title: event.description,
               allDay: false,
@@ -113,7 +138,9 @@ export class CalendarComponent implements OnInit {
                 prestataireName: event.prestataireName,
                 adminName: event.adminName,
                 eventStatus: event.eventStatus,
-                clientName: event.clientName
+                clientName: event.clientName,
+                posId: event.posId,
+                serviceId: event.serviceId
               }
             }))
           }));
@@ -137,8 +164,9 @@ export class CalendarComponent implements OnInit {
   }
 
   handleDateSelect(dateSelectInfo: DateSelectArg) {
+    const selectedDate = new Date(dateSelectInfo.startStr).toISOString();
     this.router.navigate(['/ui-components/create-event'], {
-      queryParams: { date: dateSelectInfo.startStr }
+      queryParams: { date: selectedDate }
     });
   }
 
@@ -170,8 +198,26 @@ export class CalendarComponent implements OnInit {
   }
 
   handleEventClick(eventClickInfo: EventClickArg) {
-    this.router.navigate(['/ui-components/create-event'], {
-      queryParams: { eventId: eventClickInfo.event.id }
+    const posId = eventClickInfo.event.extendedProps['posId'];
+    const eventId = eventClickInfo.event.id;
+    const userRole = this.getUserRole();
+    const serviceId = eventClickInfo.event.extendedProps['serviceId'];
+
+    console.log('Handling event click with:', {
+      eventId: eventId,
+      posId: posId,
+      userRole: userRole,
+      serviceId: serviceId
+    });
+
+    this.router.navigate(['/ui-components/selected-event'], {
+      queryParams: {
+        eventId: eventId,
+        posId: posId,
+        userRole: userRole,
+        serviceId: serviceId
+
+      }
     });
   }
 

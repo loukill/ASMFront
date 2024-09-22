@@ -3,9 +3,15 @@ import { RouterModule, Routes } from '@angular/router';
 import { CalendarComponent } from './calendar/components/fullcalendar-basic/calendar.component';
 import { AppChipsComponent } from './chips/chips.component';
 import { AppListsComponent } from './lists/lists.component';
-import { AppMenuComponent } from './menu/menu.component';
+import { PosListComponent } from './menu/pos-list.component';
 import { AppTooltipsComponent } from './tooltips/tooltips.component';
 import { EventFormComponent } from './calendar/event-form/event-form.component';
+import { EventActionsComponent } from './calendar/event-actions/event-actions.component';
+import { PosDetailsComponent } from './menu/pos-details/pos-details.component';
+import { PosEditComponent } from './menu/pos-edit/pos-edit.component';
+import { PosAddComponent } from './menu/pos-add/pos-add.component';
+import { AddServiceComponent } from './add-service/add-service.component';
+import { RoleGuard } from 'src/app/role.guard';
 
 const routes: Routes = [
   {
@@ -14,6 +20,7 @@ const routes: Routes = [
       {
         path: 'calendar',
         component: CalendarComponent,
+        canActivate: [RoleGuard],
       },
       {
         path: 'chips',
@@ -22,11 +29,16 @@ const routes: Routes = [
       {
         path: 'lists',
         component: AppListsComponent,
+        canActivate: [RoleGuard],
       },
       {
-        path: 'menu',
-        component: AppMenuComponent,
+        path: 'pos-list',
+        component: PosListComponent,
       },
+      { path: 'pos/:id', component: PosDetailsComponent, canActivate: [RoleGuard]},
+      { path: 'add-pos', component: PosAddComponent, canActivate: [RoleGuard] },
+      { path: 'pos/edit/:id', component: PosEditComponent, canActivate: [RoleGuard] },
+      { path: '', redirectTo: '/pos-list', pathMatch: 'full' },
       {
         path: 'tooltips',
         component: AppTooltipsComponent,
@@ -34,7 +46,14 @@ const routes: Routes = [
       {
         path: 'create-event',
         component: EventFormComponent,
+        canActivate: [RoleGuard],
       },
+      {
+        path: 'selected-event',
+        component: EventActionsComponent,
+        canActivate: [RoleGuard],
+      },
+      { path: 'add-service', component: AddServiceComponent },
     ],
   },
 ];

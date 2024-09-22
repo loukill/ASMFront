@@ -8,4 +8,6 @@ export interface Event {
   clientId?: string;
   prestataireId?: string;
   clientName?: String;
+  posId?: number;
+  serviceId?: number;
 }

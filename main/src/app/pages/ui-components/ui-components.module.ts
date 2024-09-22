@@ -8,18 +8,22 @@ import * as TablerIcons from 'angular-tabler-icons/icons';
 
 import { UiComponentsRoutingModule } from './ui-components.routing';
 import { EventFormComponent } from './calendar/event-form/event-form.component';
+import { EventActionsComponent } from './calendar/event-actions/event-actions.component';
 import { AppChipsComponent } from './chips/chips.component';
 import { AppListsComponent } from './lists/lists.component';
-import { AppMenuComponent } from './menu/menu.component';
+import { PosListComponent } from './menu/pos-list.component';
+import { PosDetailsComponent } from './menu/pos-details/pos-details.component';
 import { AppTooltipsComponent } from './tooltips/tooltips.component';
 import { PrestataireModalComponent } from './calendar/event-form/prestataire.modal.component';
 
 @NgModule({
   declarations: [
     EventFormComponent,
+    EventActionsComponent,
     AppChipsComponent,
     AppListsComponent,
-    AppMenuComponent,
+    PosListComponent,
+    PosDetailsComponent,
     AppTooltipsComponent,
     PrestataireModalComponent
   ],

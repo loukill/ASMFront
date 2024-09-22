@@ -1,5 +1,23 @@
 <form (ngSubmit)="onSubmit()" class="event-form-container">
   <div class="form-group">
+    <label for="pos">Select POS</label>
+    <select
+      id="pos"
+      [(ngModel)]="selectedPosId"
+      (change)="onPosChange()"
+      name="pos"
+      required
+      [ngClass]="{'input-error': !selectedPosId && submitted}"
+      class="custom-select"
+    >
+      <option *ngFor="let pos of posList" [value]="pos.posId">
+        {{ pos.posName }} - {{ pos.posLocation }}
+      </option>
+    </select>
+    <div *ngIf="!selectedPosId && submitted" class="error-message">Please select a POS.</div>
+  </div>
+
+  <div class="form-group">
     <label for="description">Description</label>
     <input
       type="text"
@@ -8,29 +26,26 @@
       name="description"
       placeholder="Enter event description"
       required
+      [ngClass]="{'input-error': !event.description && submitted}"
     />
+    <div *ngIf="!event.description && submitted" class="error-message">Description is required.</div>
   </div>
 
   <div class="form-group">
-    <label for="adminName">Admin Name</label>
-    <input
-      type="text"
-      id="adminName"
-      [(ngModel)]="event.adminName"
-      name="adminName"
-      placeholder="Enter admin name"
-    />
-  </div>
-
-  <div class="form-group">
-    <label for="prestataireName">Prestataire Name</label>
-    <input
-      type="text"
+    <label for="prestataireName">Select Prestataire</label>
+    <select
       id="prestataireName"
       [(ngModel)]="event.prestataireName"
       name="prestataireName"
-      placeholder="Enter prestataire name"
-    />
+      class="custom-select"
+      required
+      [ngClass]="{'input-error': !event.prestataireName && submitted}"
+    >
+      <option *ngFor="let prestataire of prestataires" [value]="prestataire.userName">
+        {{ prestataire.userName }}
+      </option>
+    </select>
+    <div *ngIf="!event.prestataireName && submitted" class="error-message">Please select a prestataire.</div>
   </div>
 
   <div class="form-group">
@@ -51,15 +66,29 @@
       [(ngModel)]="event.eventStatus"
       name="eventStatus"
       required
+      [ngClass]="{'input-error': !event.eventStatus && submitted}"
       class="custom-select"
     >
       <option value="Pending">Pending</option>
-      <option value="Accepted">Accepted</option>
-      <option value="InProgress">In Progress</option>
-      <option value="Completed">Completed</option>
-      <option value="Rejected">Rejected</option>
-      <option value="Assigned">Assigned</option>
     </select>
+    <div *ngIf="!event.eventStatus && submitted" class="error-message">Event status is required.</div>
+  </div>
+
+  <div class="form-group">
+    <label for="service">Select Service</label>
+    <select
+      id="service"
+      [(ngModel)]="selectedServiceId"
+      name="service"
+      required
+      [ngClass]="{'input-error': !selectedServiceId && submitted}"
+      class="custom-select"
+    >
+      <option *ngFor="let service of services" [value]="service.serviceId">
+        {{ service.serviceName }} - {{ service.prix | currency }}
+      </option>
+    </select>
+    <div *ngIf="!selectedServiceId && submitted" class="error-message">Please select a service.</div>
   </div>
 
   <div class="form-group">
@@ -69,7 +98,10 @@
       id="dateRequest"
       [(ngModel)]="eventDate"
       name="dateRequest"
+      required
+      [ngClass]="{'input-error': !eventDate && submitted}"
     />
+    <div *ngIf="!eventDate && submitted" class="error-message">Event date is required.</div>
   </div>
 
   <div class="form-group">
@@ -82,7 +114,9 @@
     />
   </div>
 
-  <button *ngIf="!isEventSelected" type="submit" class="submit-button">Create Event</button>
+  <button (click)="submitted = true; onSubmit()" type="submit" class="submit-button">
+    Create Event
+  </button>
 
   <div *ngIf="isEventSelected" class="action-buttons">
     <button type="button" class="update-button" (click)="updateEvent()">

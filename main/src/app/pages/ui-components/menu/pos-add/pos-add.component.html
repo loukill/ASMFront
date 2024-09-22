@@ -1,0 +1,61 @@
+<div class="pos-form">
+  <form (ngSubmit)="onSubmit()" #posForm="ngForm">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Add New POS</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+
+        <!-- POS Name -->
+        <mat-form-field appearance="fill">
+          <mat-label>POS Name</mat-label>
+          <input matInput [(ngModel)]="pos.posName" name="posName" required />
+        </mat-form-field>
+
+        <!-- POS Location -->
+        <mat-form-field appearance="fill">
+          <mat-label>POS Location</mat-label>
+          <input matInput [(ngModel)]="pos.posLocation" name="posLocation" required />
+        </mat-form-field>
+
+        <!-- Services (Dynamically Addable) -->
+        <h4>Services</h4>
+        <div *ngFor="let service of services; let i = index">
+          <mat-form-field appearance="fill">
+            <mat-label>Service Name</mat-label>
+            <input matInput [(ngModel)]="service.name" name="serviceName{{i}}" required />
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Service Price</mat-label>
+            <input matInput [(ngModel)]="service.prix" name="servicePrice{{i}}" type="number" required />
+          </mat-form-field>
+          <button mat-icon-button color="warn" (click)="removeService(i)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+        <button mat-button (click)="addService()">Add Service</button>
+
+        <!-- Prestataires (Multiple Selection) -->
+        <mat-form-field appearance="fill">
+          <mat-label>Prestataires</mat-label>
+          <mat-select [(ngModel)]="selectedPrestataires" name="prestataires" multiple>
+            <mat-option *ngFor="let prestataire of prestataires" [value]="prestataire">{{prestataire.userName}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- Image Upload -->
+        <div class="image-upload-section">
+          <label for="fileInput">Upload POS Image:</label>
+          <input id="fileInput" type="file" (change)="onFileSelected($event)" />
+        </div>
+
+        <!-- Submit Button -->
+        <div class="action-buttons">
+          <button mat-button type="submit" [disabled]="!posForm.form.valid">Add POS</button>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+  </form>
+</div>
